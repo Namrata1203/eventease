@@ -1,0 +1,83 @@
+@using eventease.Models
+
+<div id="copilot-panel" class="bg-white/5 rounded-2xl p-6 md:p-8 border border-white/10 shadow-2xl backdrop-blur-md">
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-white/10 pb-6 mb-8">
+        <div>
+            <div class="flex items-center gap-2 text-indigo-400 font-mono text-sm uppercase tracking-wider mb-2">
+                <span>✨ Copilot Integration Suite</span>
+            </div>
+            <h2 class="text-3xl font-sans font-bold text-white tracking-tight">
+                AI Assistant Portfolio Logs
+            </h2>
+            <p class="text-slate-300 mt-1 max-w-2xl text-sm md:text-base">
+                Detailed log documenting how AI Copilot was leveraged across planning, validation design, debugging, and advanced feature composition.
+            </p>
+        </div>
+        <div class="bg-indigo-500/15 border border-indigo-500/30 rounded-lg p-3 flex items-center gap-2 backdrop-blur-md">
+            <span class="text-xs font-mono font-medium text-indigo-300">COPILOT STATUS: ASSISTED</span>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6">
+        @foreach (var log in Logs)
+        {
+            <div id="log-card-@log.Id" class="bg-white/5 rounded-xl border border-white/10 shadow-xl hover:shadow-2xl transition-all hover:bg-white/10 p-6 flex flex-col gap-6 backdrop-blur-md">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-white/5 pb-4">
+                    <div>
+                        <span class="text-xs font-mono font-semibold text-slate-400 uppercase tracking-widest block mb-1">
+                            @log.Stage
+                        </span>
+                        <h3 class="text-lg font-bold text-white font-sans tracking-tight">
+                            @log.TaskTitle
+                        </h3>
+                    </div>
+                    <span class="bg-emerald-500/10 text-emerald-300 text-xs font-semibold px-2.5 py-1 rounded-full border border-emerald-500/20 inline-flex items-center gap-1 self-start md:self-center">
+                        ✓ Verified
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold text-white mb-1 flex items-center gap-1.5 font-sans">
+                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                Developmental Challenge
+                            </h4>
+                            <p class="text-slate-300 leading-relaxed font-sans">@log.Challenge</p>
+                        </div>
+
+                        <div class="bg-slate-900/50 rounded-lg p-4 border border-white/5 font-mono">
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">
+                                Sample Prompt Sent to Copilot
+                            </h4>
+                            <p class="text-xs text-indigo-200 leading-relaxed italic bg-white/5 p-3 rounded border border-white/10 shadow-inner">
+                                "@log.PromptUsed"
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold text-white mb-1 flex items-center gap-1.5 font-sans">
+                                <span class="text-indigo-400">🛡️</span> Copilot Generation Guidance
+                            </h4>
+                            <p class="text-slate-300 leading-relaxed font-sans">@log.AssistanceReceived</p>
+                        </div>
+
+                        <div>
+                            <h4 class="font-semibold text-indigo-300 mb-1 flex items-center gap-1.5 font-sans bg-indigo-500/10 border border-indigo-500/20 px-2 py-1 rounded w-fit text-xs font-medium">
+                                Outcome & Project Artifact Value
+                            </h4>
+                            <p class="text-indigo-200 leading-relaxed font-sans mt-2">@log.OutcomeAndValue</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public List<CopilotLog> Logs { get; set; } = new();
+}

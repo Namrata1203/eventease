@@ -1,0 +1,63 @@
+@page "/"
+@inject eventease.Services.EventDataService DataService
+
+<div class="mb-10 text-center md:text-left">
+    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-sm font-medium mb-4">
+        <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+        Global Event Registry Live
+    </div>
+    <h1 class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400 tracking-tight mb-4">
+        Discover Extraordinary Events
+    </h1>
+    <p class="text-lg text-slate-400 max-w-2xl font-light">
+        Secure your spot at the most exclusive tech conferences, developer summits, and networking sessions. Waitlists available for sold-out venues.
+    </p>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <div class="@((SelectedEventId != null) ? "lg:col-span-7" : "lg:col-span-12") transition-all">
+        <div class="@((SelectedEventId != null) ? "grid grid-cols-1 gap-6" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6")">
+            @foreach (var ev in DataService.Events)
+            {
+                <EventCard EventData="@ev" ShowRegisterButton="true" OnRegister="SelectEvent" />
+            }
+        </div>
+    </div>
+    
+    @if (SelectedEventId != null)
+    {
+        <div class="lg:col-span-5 relative">
+            <div class="sticky top-24">
+                <RegistrationForm EventId="@SelectedEventId" OnSubmit="HandleRegistration" />
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private string? SelectedEventId;
+
+    private void SelectEvent(string id)
+    {
+        SelectedEventId = id;
+    }
+
+    private void HandleRegistration(RegistrationForm.RegistrationModel model)
+    {
+        var ev = DataService.Events.FirstOrDefault(e => e.Id == SelectedEventId);
+        if (ev != null && ev.RegisteredCount < ev.Capacity)
+        {
+            ev.RegisteredCount++;
+            
+            var attendee = new Attendee
+            {
+                Id = $"at-{Guid.NewGuid().ToString().Substring(0, 4)}",
+                EventId = ev.Id,
+                Name = model.Name,
+                Email = model.Email,
+                RegisteredAt = DateTime.UtcNow.ToString("o")
+            };
+            DataService.Attendees.Add(attendee);
+        }
+    }
+}

@@ -1,0 +1,4 @@
+@page "/attendance"
+@inject eventease.Services.EventDataService DataService
+
+<AttendanceTracker Attendees="DataService.Attendees" />
